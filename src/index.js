@@ -25,10 +25,10 @@ const addTodo = () => {
       toggleTodo(newTodo);
     });
 
-    todoList.appendChild(newTodo);
+    todoList.insertBefore(newTodo, todoList.children[0]);
     textField.value = '';
   } else {
-    console.log('need input');
+    console.log('no input given');
   }
 };
 
@@ -42,8 +42,12 @@ textField.addEventListener('keydown', (e) => {
 const toggleTodo = (todoEl) => {
   if (todoEl.classList.contains('done')) {
     todoEl.classList.remove('done');
+    todoList.removeChild(todoEl);
+    todoList.insertBefore(todoEl, todoList.children[0]);
   } else {
     todoEl.classList.add('done');
+    todoList.removeChild(todoEl);
+    todoList.insertBefore(todoEl, todoList.children[todoList.length]);
   }
 };
 
