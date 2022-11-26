@@ -39,16 +39,56 @@ textField.addEventListener('keydown', (e) => {
   }
 });
 
+// const findFirstDone = () => {
+//   const todos = Array.from(todoList.children);
+//   const index = todos.findIndex((el) => el.classList.contains('done'));
+
+//   console.log('findFirstDone', {
+//     index,
+//     'todos.length': todos.length,
+//     'todoList.length': todoList.length,
+//   });
+
+//   return index >= 0 ? index : todos.length;
+// };
+
+const findInsertBeforeEl = () => {
+  const todos = Array.from(todoList.children);
+  let index = todos.findIndex((el) => el.classList.contains('done'));
+  index = index >= 0 ? index : todos.length;
+  return todos[index];
+};
+
 const toggleTodo = (todoEl) => {
-  if (todoEl.classList.contains('done')) {
-    todoEl.classList.remove('done');
-    todoList.removeChild(todoEl);
-    todoList.insertBefore(todoEl, todoList.children[0]);
-  } else {
-    todoEl.classList.add('done');
-    todoList.removeChild(todoEl);
-    todoList.insertBefore(todoEl, todoList.children[todoList.length]);
-  }
+  todoList.removeChild(todoEl);
+
+  todoEl.classList.contains('done')
+    ? todoEl.classList.remove('done')
+    : todoEl.classList.add('done');
+
+  const insertBeforeEl = findInsertBeforeEl();
+  todoList.insertBefore(todoEl, insertBeforeEl);
+
+  // if (todoEl.classList.contains('done')) {
+  //   todoEl.classList.remove('done');
+
+  //   const index = findFirstDone();
+  //   const insertBeforeEl = todoList.children[index];
+  //   console.log({ index, insertBeforeEl });
+
+  //   todoList.insertBefore(todoEl, insertBeforeEl);
+  // } else {
+  //   todoEl.classList.add('done');
+
+  //   const index = findFirstDone();
+  //   const insertBeforeEl = todoList.children[index];
+
+  //   // const index2 = index - todoList.length;
+  //   // const insertBeforeEl = todoList.children[index2];
+  //   // console.log({ index, index2, insertBeforeEl });
+
+  //   todoList.insertBefore(todoEl, insertBeforeEl);
+  // }
 };
 
 console.log('🚀 todo app started. welcome!', { appEl });
