@@ -19,8 +19,24 @@ appEl.appendChild(todoList);
 const addTodo = () => {
   let input = textField.value;
   if (input) {
-    let newTodo = document.createElement('li');
+    // const li = document.createElement('li');
+    // const div = document.createElement('div');
+    // div.innerText = input;
+    // li.appendChild(div);
+    // todoList.appendChild(li);
+    // textField.value = '';
+
+    const newTodo = document.createElement('li');
     newTodo.innerText = input;
+    newTodo.addEventListener('click', () => {
+      // console.log('click', newTodo.innerText);
+      toggleTodo(newTodo);
+    });
+
+    // newTodo.addEventListener('click', () => {
+    //   console.log('click', newTodo.innerText);
+    // });
+
     todoList.appendChild(newTodo);
     textField.value = '';
   } else {
@@ -28,6 +44,36 @@ const addTodo = () => {
   }
 };
 
+// todoList.querySelectorAll('li').forEach((e) => {
+//   e.addEventListener('click', checkTodo);
+// });
+
+// todoList.addEventListener('click', (event) => {
+//   const todo = event.target;
+//   console.log(todo);
+//   todo.style.opacity = '0.5';
+//   todo.style.textDecoration = 'line-through';
+
+//   // console.log(event);
+// });
+
 submitButton.addEventListener('click', addTodo);
+textField.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    addTodo();
+  }
+});
+
+const toggleTodo = (todoEl) => {
+  if (todoEl.classList.contains('done')) {
+    todoEl.classList.remove('done');
+  } else {
+    todoEl.classList.add('done');
+  }
+};
+
+// const checkTodo = () => {
+//   console.log('clicked!');
+// };
 
 console.log('🚀 todo app started. welcome!', { appEl });

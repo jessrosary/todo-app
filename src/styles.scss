@@ -13,3 +13,14 @@ h2 {
 button {
   margin-left: 10px;
 }
+
+ul {
+  li {
+    cursor: pointer;
+
+    &.done {
+      color: grey;
+      text-decoration: line-through;
+    }
+  }
+}
