@@ -11,21 +11,33 @@ const validateTextField = (textFieldEl) => {
     : textFieldEl.classList.remove('buzzword');
 };
 
+// const isValidInput = (text) => text && !hasBuzzword(text);
+
 const addTodo = (todoListEl, textFieldEl) => {
   const text = textFieldEl.value;
 
-  if (text) {
-    const newTodo = document.createElement('li');
-    newTodo.innerText = text;
-    newTodo.addEventListener('click', () => {
-      toggleTodo(todoListEl, newTodo);
-    });
+  // if (!isValidInput(text)) return;
 
-    todoListEl.insertBefore(newTodo, todoListEl.children[0]);
-    textFieldEl.value = '';
-  } else {
+  // check if text is null
+  if (!text) {
     console.log('no input given');
+    return;
   }
+
+  // check if text has buzzword
+  if (hasBuzzword(text)) {
+    console.log('read a normal book please');
+    return;
+  }
+
+  const newTodo = document.createElement('li');
+  newTodo.innerText = text;
+  newTodo.addEventListener('click', () => {
+    toggleTodo(todoListEl, newTodo);
+  });
+
+  todoListEl.insertBefore(newTodo, todoListEl.children[0]);
+  textFieldEl.value = '';
 };
 
 const toggleTodo = (todoListEl, todoEl) => {
@@ -70,7 +82,7 @@ const App = (appEl) => {
   appEl.appendChild(submitButton);
   appEl.appendChild(todoList);
 
-  // jules is autistic
+  // jules's solution
   // const submitHandler = () => addTodo(todoList, textField);
   // submitButton.addEventListener('click', submitHandler);
   // submitButton.addEventListener('keydown', onEnter(submitHandler));
