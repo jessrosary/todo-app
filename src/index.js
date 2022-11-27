@@ -1,94 +1,95 @@
 import './styles.scss';
+import { hasBuzzword } from './buzzwords';
 
-const appEl = document.querySelector('div.app');
-const headingEl = document.createElement('h2');
-headingEl.innerText = 'My Todos';
+// Helpers
 
-appEl.innerText = '';
-appEl.appendChild(headingEl);
+const validateTextField = (textFieldEl) => {
+  const text = textFieldEl.value;
 
-const textField = document.createElement('input');
-const submitButton = document.createElement('button');
-submitButton.innerText = 'Add Todo';
-const todoList = document.createElement('ul');
+  hasBuzzword(text)
+    ? textFieldEl.classList.add('buzzword')
+    : textFieldEl.classList.remove('buzzword');
+};
 
-appEl.appendChild(textField);
-appEl.appendChild(submitButton);
-appEl.appendChild(todoList);
+const addTodo = (todoListEl, textFieldEl) => {
+  const text = textFieldEl.value;
 
-const addTodo = () => {
-  let input = textField.value;
-  if (input) {
+  if (text) {
     const newTodo = document.createElement('li');
-    newTodo.innerText = input;
+    newTodo.innerText = text;
     newTodo.addEventListener('click', () => {
-      toggleTodo(newTodo);
+      toggleTodo(todoListEl, newTodo);
     });
 
-    todoList.insertBefore(newTodo, todoList.children[0]);
-    textField.value = '';
+    todoListEl.insertBefore(newTodo, todoListEl.children[0]);
+    textFieldEl.value = '';
   } else {
     console.log('no input given');
   }
 };
 
-submitButton.addEventListener('click', addTodo);
-textField.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    addTodo();
-  }
-});
-
-// const findFirstDone = () => {
-//   const todos = Array.from(todoList.children);
-//   const index = todos.findIndex((el) => el.classList.contains('done'));
-
-//   console.log('findFirstDone', {
-//     index,
-//     'todos.length': todos.length,
-//     'todoList.length': todoList.length,
-//   });
-
-//   return index >= 0 ? index : todos.length;
-// };
-
-const findInsertBeforeEl = () => {
-  const todos = Array.from(todoList.children);
-  let index = todos.findIndex((el) => el.classList.contains('done'));
-  index = index >= 0 ? index : todos.length;
-  return todos[index];
-};
-
-const toggleTodo = (todoEl) => {
-  todoList.removeChild(todoEl);
+const toggleTodo = (todoListEl, todoEl) => {
+  todoListEl.removeChild(todoEl);
 
   todoEl.classList.contains('done')
     ? todoEl.classList.remove('done')
     : todoEl.classList.add('done');
 
-  const insertBeforeEl = findInsertBeforeEl();
-  todoList.insertBefore(todoEl, insertBeforeEl);
-
-  // if (todoEl.classList.contains('done')) {
-  //   todoEl.classList.remove('done');
-
-  //   const index = findFirstDone();
-  //   const insertBeforeEl = todoList.children[index];
-  //   console.log({ index, insertBeforeEl });
-
-  //   todoList.insertBefore(todoEl, insertBeforeEl);
-  // } else {
-  //   todoEl.classList.add('done');
-
-  //   const index = findFirstDone();
-  //   const insertBeforeEl = todoList.children[index];
-
-  //   // const index2 = index - todoList.length;
-  //   // const insertBeforeEl = todoList.children[index2];
-  //   // console.log({ index, index2, insertBeforeEl });
-
-  //   todoList.insertBefore(todoEl, insertBeforeEl);
-  // }
+  const insertBeforeEl = findInsertBeforeEl(todoListEl);
+  todoListEl.insertBefore(todoEl, insertBeforeEl);
 };
 
-console.log('🚀 todo app started. welcome!', { appEl });
+const findInsertBeforeEl = (todoListEl) => {
+  const todos = Array.from(todoListEl.children);
+  let index = todos.findIndex((el) => el.classList.contains('done'));
+  index = index >= 0 ? index : todos.length;
+  return todos[index];
+};
+
+const onEnter = (fun) => (event) => {
+  if (event.key === 'Enter') {
+    fun();
+  }
+};
+
+// Main
+
+const App = (appEl) => {
+  const headingEl = document.createElement('h2');
+  headingEl.innerText = 'My Todos';
+
+  appEl.innerText = '';
+  appEl.appendChild(headingEl);
+
+  const textField = document.createElement('input');
+  const submitButton = document.createElement('button');
+  submitButton.innerText = 'Add Todo';
+  const todoList = document.createElement('ul');
+
+  appEl.appendChild(textField);
+  appEl.appendChild(submitButton);
+  appEl.appendChild(todoList);
+
+  // jules is autistic
+  // const submitHandler = () => addTodo(todoList, textField);
+  // submitButton.addEventListener('click', submitHandler);
+  // submitButton.addEventListener('keydown', onEnter(submitHandler));
+
+  submitButton.addEventListener('click', () => {
+    addTodo(todoList, textField);
+  });
+
+  textField.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      addTodo(todoList, textField);
+    }
+  });
+
+  textField.addEventListener('keyup', () => {
+    validateTextField(textField);
+  });
+};
+
+App(document.querySelector('div.app'));
+
+//console.log('🚀 todo app started. welcome!', { appEl });
