@@ -1,4 +1,5 @@
 import './styles.scss';
+import 'bootstrap';
 import { hasBuzzword } from './buzzwords';
 
 // Helpers
@@ -11,61 +12,13 @@ const validateTextField = (textFieldEl) => {
     : textFieldEl.classList.remove('buzzword');
 };
 
-// const isValidInput = (text) => text && !hasBuzzword(text);
-
-const addTodo = (todoListEl, textFieldEl) => {
-  const text = textFieldEl.value;
-
-  // if (!isValidInput(text)) return;
-
-  // check if text is null
-  if (!text) {
-    console.log('no input given');
-    return;
-  }
-
-  // check if text has buzzword
-  if (hasBuzzword(text)) {
-    console.log('read a normal book please');
-    return;
-  }
-
-  const newTodo = document.createElement('li');
-  newTodo.innerText = text;
-  newTodo.addEventListener('click', () => {
-    toggleTodo(todoListEl, newTodo);
-  });
-
-  todoListEl.insertBefore(newTodo, todoListEl.children[0]);
-  textFieldEl.value = '';
-};
-
-const toggleTodo = (todoListEl, todoEl) => {
-  todoListEl.removeChild(todoEl);
-
-  todoEl.classList.contains('done')
-    ? todoEl.classList.remove('done')
-    : todoEl.classList.add('done');
-
-  const insertBeforeEl = findInsertBeforeEl(todoListEl);
-  todoListEl.insertBefore(todoEl, insertBeforeEl);
-};
-
-const findInsertBeforeEl = (todoListEl) => {
-  const todos = Array.from(todoListEl.children);
-  let index = todos.findIndex((el) => el.classList.contains('done'));
-  index = index >= 0 ? index : todos.length;
-  return todos[index];
-};
-
-const onEnter = (fun) => (event) => {
-  if (event.key === 'Enter') {
-    fun();
-  }
-};
+// const onEnter = (fun) => (event) => {
+//   if (event.key === 'Enter') {
+//     fun();
+//   }
+// };
 
 // Main
-
 const App = (appEl) => {
   const headingEl = document.createElement('h2');
   headingEl.innerText = 'My Todos';
@@ -77,10 +30,60 @@ const App = (appEl) => {
   const submitButton = document.createElement('button');
   submitButton.innerText = 'Add Todo';
   const todoList = document.createElement('ul');
+  const alertEl = document.createElement('div');
+  alertEl.setAttribute('role', 'alert');
+  alertEl.setAttribute('style', 'display: none');
+  alertEl.classList.add('alert', 'alert-danger');
 
+  appEl.appendChild(alertEl);
   appEl.appendChild(textField);
   appEl.appendChild(submitButton);
   appEl.appendChild(todoList);
+
+  const addTodo = (todoListEl, textFieldEl) => {
+    const text = textFieldEl.value;
+
+    // check if text is null
+    if (!text) {
+      console.log('no input given');
+      return;
+    }
+
+    // check if text has buzzword
+    if (hasBuzzword(text)) {
+      alertEl.removeAttribute('style', 'display: none');
+      alertEl.innerText = 'Startup terms are forbidden. Try again, nerd.';
+      return;
+    }
+
+    alertEl.setAttribute('style', 'display: none');
+    const newTodo = document.createElement('li');
+    newTodo.innerText = text;
+    newTodo.addEventListener('click', () => {
+      toggleTodo(todoListEl, newTodo);
+    });
+
+    todoListEl.insertBefore(newTodo, todoListEl.children[0]);
+    textFieldEl.value = '';
+  };
+
+  const toggleTodo = (todoListEl, todoEl) => {
+    todoListEl.removeChild(todoEl);
+
+    todoEl.classList.contains('done')
+      ? todoEl.classList.remove('done')
+      : todoEl.classList.add('done');
+
+    const insertBeforeEl = findInsertBeforeEl(todoListEl);
+    todoListEl.insertBefore(todoEl, insertBeforeEl);
+  };
+
+  const findInsertBeforeEl = (todoListEl) => {
+    const todos = Array.from(todoListEl.children);
+    let index = todos.findIndex((el) => el.classList.contains('done'));
+    index = index >= 0 ? index : todos.length;
+    return todos[index];
+  };
 
   // jules's solution
   // const submitHandler = () => addTodo(todoList, textField);

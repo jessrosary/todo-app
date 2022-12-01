@@ -1,3 +1,5 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+
 .app {
   border: 1px solid #afafaf;
   border-radius: 4px;
@@ -15,6 +17,8 @@ button {
 }
 
 ul {
+  margin-top: 15px;
+
   li {
     cursor: pointer;
 
@@ -28,6 +32,8 @@ ul {
 input {
   outline: none;
   border: 1px solid grey;
+  padding: 2px;
+  border-radius: 3px;
 
   &.buzzword {
     border: 1px solid red;
